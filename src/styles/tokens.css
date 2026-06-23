@@ -1,0 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --ink-950: #0e0b0a;
+  --ink-900: #16110f;
+  --ink-850: #1c1614;
+  --ink-800: #241d1a;
+  --ink-750: #2c241f;
+  --ink-700: #3a2e26;
+  --ink-600: #4a3d34;
+  --ink-500: #6b5a4e;
+  --ink-400: #95826f;
+  --ink-300: #bba793;
+  --ink-200: #dfd0bd;
+  --ink-100: #f5ebdc;
+  --ink-050: #fdf8f0;
+
+  --ember-300: #a8d0cd;
+  --ember-400: #5daba7;
+  --ember-500: #3d8a86;
+  --ember-600: #2d6f6b;
+  --ember-700: #1f5550;
+  --ember-900: #0e2a28;
+
+  --gold-500: #f2b544;
+  --sage-500: #7ba17b;
+  --blood-500: #d24a4a;
+  --mist-500: #6b92a8;
+
+  --bg: var(--ink-900);
+  --bg-deep: var(--ink-950);
+  --surface: var(--ink-850);
+  --surface-raised: var(--ink-800);
+  --surface-hover: var(--ink-750);
+  --border: var(--ink-700);
+  --border-strong: var(--ink-600);
+
+  --fg: var(--ink-100);
+  --fg-bright: var(--ink-050);
+  --fg-dim: var(--ink-200);
+  --fg-muted: var(--ink-300);
+  --fg-subtle: var(--ink-400);
+  --fg-faint: var(--ink-500);
+
+  --accent: var(--ember-500);
+  --accent-hover: var(--ember-400);
+  --accent-active: var(--ember-600);
+  --accent-wash: color-mix(in oklab, var(--ember-500) 14%, transparent);
+  --accent-soft-bg: var(--ember-900);
+  --accent-soft-fg: var(--ember-300);
+  --accent-soft-border: var(--ember-700);
+
+  --star: var(--gold-500);
+  --heart: var(--blood-500);
+  --success: var(--sage-500);
+  --danger: var(--blood-500);
+  --external: var(--mist-500);
+
+  --font-display: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --font-ui: "Geist", -apple-system, "SF Pro Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --t-xs: 11px;
+  --t-sm: 13px;
+  --t-base: 15px;
+  --t-md: 17px;
+  --t-lg: 20px;
+  --t-xl: 24px;
+  --t-2xl: 32px;
+
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-normal: 1.45;
+  --lh-loose: 1.65;
+
+  --track-tight: -0.02em;
+  --track-snug: -0.01em;
+  --track-cap: 0.12em;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-2xl: 28px;
+  --r-full: 9999px;
+
+  --shadow-1: 0 1px 2px rgba(14, 11, 10, 0.4);
+  --shadow-2: 0 4px 12px rgba(14, 11, 10, 0.5), 0 1px 2px rgba(14, 11, 10, 0.3);
+  --shadow-3: 0 12px 32px rgba(14, 11, 10, 0.55), 0 2px 6px rgba(14, 11, 10, 0.35);
+  --inset-cover: inset 0 0 0 1px rgba(245, 235, 220, 0.06),
+    inset 0 -40px 60px -30px rgba(14, 11, 10, 0.5);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+}
+
+[data-theme="light"] {
+  --bg: #fbf5e8;
+  --bg-deep: #f3ebd8;
+  --surface: #fffcf3;
+  --surface-raised: #ffffff;
+  --surface-hover: #f7efdd;
+
+  --border: #e8ddc2;
+  --border-strong: #d4c4a0;
+
+  --fg-bright: #100a06;
+  --fg: #1f140d;
+  --fg-dim: #3a2a1f;
+  --fg-muted: #6b5a4e;
+  --fg-subtle: #95826f;
+  --fg-faint: #b6a38c;
+
+  --accent: #1f5550;
+  --accent-hover: #2d6f6b;
+  --accent-active: #134440;
+  --accent-wash: color-mix(in oklab, #1f5550 12%, transparent);
+
+  --accent-soft-bg: #dceeec;
+  --accent-soft-fg: #1f5550;
+  --accent-soft-border: #7bbfb9;
+
+  --star: #c29a1c;
+  --heart: #c03a3a;
+  --success: #4f7a4f;
+  --danger: #c03a3a;
+  --external: #44708a;
+
+  --shadow-1: 0 1px 2px rgba(60, 40, 20, 0.06);
+  --shadow-2: 0 4px 12px rgba(60, 40, 20, 0.08), 0 1px 2px rgba(60, 40, 20, 0.06);
+  --shadow-3: 0 12px 32px rgba(60, 40, 20, 0.1), 0 2px 6px rgba(60, 40, 20, 0.06);
+  --inset-cover: inset 0 0 0 1px rgba(31, 20, 13, 0.06),
+    inset 0 -40px 60px -30px rgba(31, 20, 13, 0.15);
+}
