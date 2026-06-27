@@ -55,6 +55,20 @@ describe('app routes and shared UI', () => {
     expect(screen.getByRole('heading', { name: /antworten/i })).toBeInTheDocument();
   });
 
+  it('renders the published terms page', () => {
+    renderWithRouter(<App />, '/agb');
+
+    expect(
+      screen.getByRole('heading', { name: /allgemeine geschäftsbedingungen/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/stand: juni 2026/i)).toBeInTheDocument();
+    expect(screen.getByText(/tonspur ug i\.g\./i)).toBeInTheDocument();
+    expect(screen.getByText(/tonspur club ist ein optionales/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /verbraucherstreitbeilegung/i }),
+    ).toBeInTheDocument();
+  });
+
   it('falls store badges back to the download anchor', () => {
     render(<StoreButtons />);
     expect(screen.getByRole('link', { name: /app store/i })).toHaveAttribute('href', '#download');

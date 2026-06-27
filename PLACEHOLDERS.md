@@ -7,8 +7,8 @@
 - Reviews: Lena, Tobias, and Mira testimonials are sample copy, not verified user quotes.
 - Blog content: all blog cards are editorial drafts and not final articles.
 - Press kit: downloadable assets, screenshots, and media files have not been supplied.
-- Legal copy: AGB, Datenschutz, and Impressum are structure placeholders and require legal review.
-- Contact/company info: emails, address, register details, tax ID, phone, and responsible editor are placeholders.
+- Legal copy: remaining Datenschutz and Impressum wording require legal review.
+- Contact/company info: register details, tax ID, and phone are not yet included.
 - Supabase env values: `.env.example` contains dummy project values only.
 - Supabase redirect URLs: production and preview URLs must be configured in the Supabase dashboard.
 - Production SEO/social assets: final social image, canonical production URL, and app screenshots are not included.

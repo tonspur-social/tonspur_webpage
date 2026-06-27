@@ -1,5 +1,4 @@
-import { Headphones, ListMusic, Play, Smartphone, Star } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Play, Smartphone } from 'lucide-react';
 
 export type Cover = {
   title: string;
@@ -9,18 +8,11 @@ export type Cover = {
   stars?: number;
 };
 
-export type Review = {
-  text: string;
-  name: string;
-  handle: string;
-  grad: string;
-};
-
 export type Feature = {
-  icon: LucideIcon;
   title: string;
   body: string;
-  grad: string;
+  imageSrc: string;
+  imageAlt: string;
   flip?: boolean;
 };
 
@@ -115,47 +107,34 @@ export const stats: Stat[] = [
 
 export const features: Feature[] = [
   {
-    icon: Headphones,
-    title: 'Tracke jede Folge, nicht nur die Serie.',
+    title: 'Entdecke, worauf du heute Lust hast.',
     body:
-      'Markiere Gehörtes mit einem Tipp. Tonspur merkt sich, bei welcher Folge du stehst - über jede Serie hinweg, auf jedem Gerät.',
-    grad: covers[2].grad,
+      'Neue Folgen, beliebte Serien und Community-Favoriten helfen dir, schneller das nächste Hörspiel zu finden.',
+    imageSrc: '/feature/entdecken.png',
+    imageAlt: 'Tonspur Entdecken-Ansicht mit Suche, neuen Folgen und beliebten Serien.',
   },
   {
-    icon: Star,
-    title: 'Bewerte und besprich, wie du wirklich redest.',
+    title: 'Behalte deine Bibliothek im Blick.',
     body:
-      'Halbe Sterne von ★ bis ★★★★★ und Kritiken in deinen eigenen Worten. Kurz und treffend oder ausführlich und verliebt.',
-    grad: covers[5].grad,
+      'Markiere, was du hören willst, was du zuletzt gehört hast und wo du in deinen Serien gerade stehst.',
+    imageSrc: '/feature/bibliothek.png',
+    imageAlt: 'Tonspur Bibliothek mit Hörwunschliste, zuletzt gehörten Folgen und Serien.',
     flip: true,
   },
   {
-    icon: ListMusic,
-    title: 'Kuratiere Listen, entdecke Neues.',
+    title: 'Sprich über Folgen, nicht nur über Serien.',
     body:
-      '„Beste Gruselnächte“, „Für lange Autofahrten“ - bau Listen, teile sie und finde über die Community dein nächstes Lieblingshörspiel.',
-    grad: covers[7].grad,
-  },
-];
-
-export const reviews: Review[] = [
-  {
-    text: 'Endlich ein Ort, an dem ich festhalten kann, welche Folge mich mit zehn nachts wachgehalten hat.',
-    name: 'Lena',
-    handle: '@nachtfunkfan',
-    grad: covers[0].grad,
+      'Starte Threads, lies Meinungen anderer Fans und halte fest, welche Szene wirklich hängen geblieben ist.',
+    imageSrc: '/feature/community.png',
+    imageAlt: 'Tonspur Community-Thread mit Diskussion zu einer Hörspielfolge.',
   },
   {
-    text: 'Mein komplettes Hörspiel-Archiv aus 20 Jahren - sortiert an einem einzigen Wochenende.',
-    name: 'Tobias',
-    handle: '@gruft13',
-    grad: covers[2].grad,
-  },
-  {
-    text: 'Die halben Sterne sind perfekt. Nicht jede Folge ist einen vollen Punkt wert.',
-    name: 'Mira',
-    handle: '@hoerschnipsel',
-    grad: covers[7].grad,
+    title: 'Sieh, wie du hörst.',
+    body:
+      'Tonspur zeigt dir deine Hörzeiten, Muster und Statistiken, ohne dass dein Hörarchiv unübersichtlich wird.',
+    imageSrc: '/feature/statistik.png',
+    imageAlt: 'Tonspur Profil mit Hörstatistik, Wochenaktivität und Hörmustern.',
+    flip: true,
   },
 ];
 
