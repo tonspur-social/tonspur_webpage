@@ -1,4 +1,14 @@
-import { Download, FileText, Mail, Package, ShieldCheck } from 'lucide-react';
+import {
+  Download,
+  FileText,
+  Globe2,
+  Image as ImageIcon,
+  Mail,
+  Palette,
+  ShieldCheck,
+  Type,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { blogPosts, faqItems } from '../data/marketing';
 
@@ -6,6 +16,43 @@ type LegalSection = {
   title: string;
   body: React.ReactNode;
 };
+
+const pressAssets = [
+  {
+    title: 'App Icon',
+    meta: 'PNG · 1024 × 1024',
+    href: '/press/tonspur-app-icon.png',
+    imageSrc: '/press/tonspur-app-icon.png',
+  },
+  {
+    title: 'Web Icon',
+    meta: 'PNG · 512 × 512',
+    href: '/press/tonspur-web-icon-512.png',
+    imageSrc: '/press/tonspur-web-icon-512.png',
+  },
+  {
+    title: 'Web Icon klein',
+    meta: 'PNG · 192 × 192',
+    href: '/press/tonspur-web-icon-192.png',
+    imageSrc: '/press/tonspur-web-icon-192.png',
+  },
+];
+
+const pressFacts = [
+  { label: 'Marke', value: 'Tonspur' },
+  { label: 'Produkt', value: 'App für Audio-Geschichten' },
+  { label: 'Bundle ID', value: 'social.tonspur.app' },
+  { label: 'Website', value: 'tonspur.app' },
+];
+
+const brandSwatches = [
+  { name: 'Background', hex: '#16110F' },
+  { name: 'Surface', hex: '#1C1614' },
+  { name: 'Text Bright', hex: '#FDF8F0' },
+  { name: 'Accent Teal', hex: '#3D8A86' },
+  { name: 'Accent Hover', hex: '#5DABA7' },
+  { name: 'Star', hex: '#F2B544' },
+];
 
 export function BlogPage() {
   return (
@@ -73,47 +120,154 @@ export function FaqPage() {
 export function PressPage() {
   return (
     <>
-      <PageHead eyebrow="Presse" title="Material für Geschichten über Tonspur.">
-        <p className="lede">
-          Kurzprofil, Bildmaterial und Ansprechpartner für Medien. Das Press Kit ist
-          vorbereitet, die finalen Assets müssen noch ergänzt werden.
-        </p>
-      </PageHead>
+      <header className="page-head press-hero">
+        <div className="container press-hero__inner">
+          <div className="press-hero__copy">
+            <span className="eyebrow">Presse Kit · Stand 27. Juni 2026</span>
+            <h1 className="display-lg">Material für Geschichten über Tonspur.</h1>
+            <p className="lede">
+              Kurzprofil, Markenangaben, Bildmaterial und Ansprechpartner für Medien.
+              Tonspur ist eine App zum Entdecken, Sammeln, Bewerten und Besprechen von
+              Hörspielen, Hörbüchern und verwandten Audioinhalten.
+            </p>
+          </div>
+          <figure className="press-hero__icon">
+            <img src="/press/tonspur-app-icon.png" alt="Tonspur App Icon" />
+            <figcaption>Offizielles Presse-Icon</figcaption>
+          </figure>
+        </div>
+      </header>
       <section className="section section--first">
         <div className="container">
-          <div className="kit-grid">
+          <div className="press-facts" aria-label="Tonspur Fakten">
+            {pressFacts.map((fact) => (
+              <div className="press-fact" key={fact.label}>
+                <span>{fact.label}</span>
+                <strong>{fact.value}</strong>
+              </div>
+            ))}
+          </div>
+
+          <div className="press-intro">
+            <div>
+              <span className="eyebrow">Kurzbeschreibung</span>
+              <h2 className="h-2">Ein kuratiertes Regal für Audio-Geschichten.</h2>
+            </div>
+            <div className="press-copy">
+              <p>
+                Tonspur richtet sich an Menschen, die Audio-Geschichten nicht nur
+                konsumieren, sondern entdecken, einordnen, sammeln und mit anderen
+                besprechen möchten.
+              </p>
+              <p>
+                Nutzerinnen und Nutzer entdecken neue Reihen und Episoden, speichern
+                Favoriten, bewerten Inhalte und tauschen sich mit der Community aus.
+              </p>
+            </div>
+          </div>
+
+          <div className="kit-grid press-kit-grid">
             <KitCard
-              icon={Package}
-              title="Brand Kit"
-              body="Logo, Farben, Screenshots und App-Icons als ZIP. Noch nicht final hochgeladen."
-              action="Asset-Platzhalter"
+              icon={ImageIcon}
+              title="Bildmaterial"
+              body="Das App Icon und Web-Icons sind aktuell die offiziellen Tonspur-Bildquellen für Presse und Vorschauen."
+              action="PNG-Assets unten"
             />
             <KitCard
               icon={FileText}
-              title="Kurzbeschreibung"
-              body="Tonspur ist ein deutsches Hörspiel-Tagebuch für Tracking, Bewertungen und Empfehlungen."
-              action="Presse-Text"
+              title="Schreibweise"
+              body="Der Markenname wird immer Tonspur geschrieben. Varianten wie TonSpur, Ton Spur oder kleingeschriebenes tonspur bitte vermeiden."
+              action="Markenname"
             />
             <KitCard
-              icon={Download}
-              title="Screenshots"
-              body="App-Screenshots werden nach Store-Freigabe ersetzt. Aktuell nutzt die Seite abstrakte Cover."
-              action="Noch offen"
+              icon={Palette}
+              title="Markenwirkung"
+              body="Tonspur wirkt ruhig, kuratiert und communitynah. Teal bleibt der primäre Akzent auf warmen neutralen Flächen."
+              action="Branding"
             />
           </div>
+
+          <div className="press-section">
+            <div className="section-head">
+              <span className="eyebrow">Downloads</span>
+              <h2 className="h-2">Offizielle Bildquellen</h2>
+            </div>
+            <div className="press-assets">
+              {pressAssets.map((asset) => (
+                <article className="press-asset" key={asset.href}>
+                  <div className="press-asset__preview">
+                    <img src={asset.imageSrc} alt="" />
+                  </div>
+                  <div>
+                    <h3 className="h-3">{asset.title}</h3>
+                    <p>{asset.meta}</p>
+                  </div>
+                  <a className="btn" href={asset.href} download>
+                    <Download aria-hidden="true" />
+                    Download
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="press-section press-brand">
+            <section>
+              <div className="feature__icon">
+                <Type strokeWidth={1.75} aria-hidden="true" />
+              </div>
+              <h2 className="h-3">Logo und Wortmarke</h2>
+              <p>
+                Die Wortmarke wird als echter Text gesetzt: Instrument Serif Italic,
+                Gewicht 400, mit ausreichend Abstand. Sie wird nicht verzerrt,
+                umrandet, gekippt oder mit fremden Effekten überladen.
+              </p>
+              <div className="press-wordmark" aria-label="Tonspur Wortmarke">
+                Tonspur
+              </div>
+            </section>
+            <section>
+              <div className="feature__icon">
+                <Globe2 strokeWidth={1.75} aria-hidden="true" />
+              </div>
+              <h2 className="h-3">Webseitennutzung</h2>
+              <p>
+                Für sichtbare Pressebereiche wird das hochaufgelöste App Icon
+                bevorzugt. Spotify-Assets gehören ausschließlich zur Spotify-Integration
+                und sind keine Tonspur-Markenassets.
+              </p>
+            </section>
+          </div>
+
+          <div className="press-section">
+            <div className="section-head">
+              <span className="eyebrow">Farben</span>
+              <h2 className="h-2">Primäre Dark-Mode-Palette</h2>
+            </div>
+            <div className="swatch-grid">
+              {brandSwatches.map((color) => (
+                <div className="swatch" key={color.hex}>
+                  <span className="swatch__chip" style={{ background: color.hex }} />
+                  <span className="swatch__name">{color.name}</span>
+                  <code>{color.hex}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="contact-grid press-contact">
             <div className="contact-card">
               <h2 className="h-3">Kontakt</h2>
               <p>
-                Presseanfragen gehen vorerst an{' '}
+                Presseanfragen gehen an{' '}
                 <a href="mailto:contact@tonspur.social">contact@tonspur.social</a>.
               </p>
             </div>
             <div className="contact-card">
-              <h2 className="h-3">Fakten</h2>
+              <h2 className="h-3">Noch fehlende Assets</h2>
               <p>
-                Alle Zahlen auf dieser Seite sind Launch-Platzhalter und müssen vor
-                Veröffentlichung validiert werden.
+                Dedizierte Wortmarken-Dateien, Open-Graph-Grafik, App-Screenshots,
+                Pressebilder und Mockups liegen aktuell noch nicht vor.
               </p>
             </div>
           </div>
@@ -1311,7 +1465,7 @@ function KitCard({
   body,
   action,
 }: {
-  icon: typeof Package;
+  icon: LucideIcon;
   title: string;
   body: string;
   action: string;
