@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import {
   getPasswordResetRedirectUrl,
-  parseAuthHash,
+  parseAuthUrlParams,
   validatePasswordReset,
 } from '../lib/site';
 
@@ -12,6 +12,9 @@ type Status = {
   type: 'idle' | 'loading' | 'success' | 'error';
   message?: string;
 };
+
+const missingRecoverySessionMessage =
+  'Dieser Link enthält keine gültige Wiederherstellungssitzung. Bitte fordere einen neuen Link an und prüfe, dass die Recovery-E-Mail auf {{ .ConfirmationURL }} verlinkt.';
 
 export function PasswordForgotPage() {
   const [email, setEmail] = useState('');
@@ -77,6 +80,39 @@ export function PasswordForgotPage() {
   );
 }
 
+export function MailSuccessPage() {
+  const hashState = parseAuthUrlParams(window.location.search, window.location.hash);
+  const status: Status = hashState.error
+    ? {
+        type: 'error',
+        message:
+          hashState.errorDescription ??
+          'Der Bestätigungslink ist ungültig oder abgelaufen.',
+      }
+    : {
+        type: 'success',
+        message: 'Deine E-Mail-Adresse wurde bestätigt. Du kannst Tonspur jetzt nutzen.',
+      };
+
+  return (
+    <AuthShell
+      eyebrow="E-Mail bestätigt"
+      title={hashState.error ? 'Der Link konnte nicht bestätigt werden.' : 'Deine Mail ist bestätigt.'}
+      body={
+        hashState.error
+          ? 'Fordere bitte einen neuen Link an oder melde dich erneut in der App an.'
+          : 'Danke für die Bestätigung. Öffne jetzt die App und melde dich mit deinem Konto an.'
+      }
+      icon={<CheckCircle2 aria-hidden="true" />}
+    >
+      <StatusMessage status={status} />
+      <p className="auth-help">
+        Zurück zur <Link to="/">Startseite</Link>
+      </p>
+    </AuthShell>
+  );
+}
+
 export function PasswordResetPage() {
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
@@ -87,13 +123,13 @@ export function PasswordResetPage() {
   });
 
   useEffect(() => {
-    const hashState = parseAuthHash(window.location.hash);
+    const authState = parseAuthUrlParams(window.location.search, window.location.hash);
 
-    if (hashState.error) {
+    if (authState.error) {
       setStatus({
         type: 'error',
         message:
-          hashState.errorDescription ??
+          authState.errorDescription ??
           'Der Wiederherstellungslink ist ungültig oder abgelaufen.',
       });
       return undefined;
@@ -108,9 +144,32 @@ export function PasswordResetPage() {
       return undefined;
     }
 
+    const authClient = supabase.auth;
     let mounted = true;
 
-    supabase.auth.getSession().then(({ data }) => {
+    async function prepareRecoverySession() {
+      if (authState.code) {
+        setStatus({ type: 'loading', message: 'Wir bestätigen deinen Wiederherstellungslink.' });
+        const { data, error } = await authClient.exchangeCodeForSession(authState.code);
+
+        if (!mounted) return;
+
+        if (error || !data.session) {
+          setStatus({
+            type: 'error',
+            message:
+              'Der Wiederherstellungslink konnte nicht bestätigt werden. Bitte fordere einen neuen Link an und öffne ihn im selben Browser.',
+          });
+          return;
+        }
+
+        setIsReady(true);
+        setStatus({ type: 'idle', message: 'Dein Link ist gültig. Wähle ein neues Passwort.' });
+        return;
+      }
+
+      const { data } = await authClient.getSession();
+
       if (!mounted) return;
 
       if (data.session) {
@@ -119,15 +178,16 @@ export function PasswordResetPage() {
       } else {
         setStatus({
           type: 'error',
-          message:
-            'Öffne bitte den Link aus deiner E-Mail erneut. Ohne gültige Sitzung können wir kein neues Passwort setzen.',
+          message: missingRecoverySessionMessage,
         });
       }
-    });
+    }
+
+    void prepareRecoverySession();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = authClient.onAuthStateChange((event, session) => {
       if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') && session) {
         setIsReady(true);
         setStatus({ type: 'idle', message: 'Dein Link ist gültig. Wähle ein neues Passwort.' });

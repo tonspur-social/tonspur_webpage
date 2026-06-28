@@ -10,7 +10,7 @@ import {
   TermsPage,
 } from './pages/ContentPages';
 import { HomePage } from './pages/HomePage';
-import { PasswordForgotPage, PasswordResetPage } from './pages/PasswordPages';
+import { MailSuccessPage, PasswordForgotPage, PasswordResetPage } from './pages/PasswordPages';
 
 export function App() {
   return (
@@ -25,6 +25,7 @@ export function App() {
           <Route path="/agb" element={<TermsPage />} />
           <Route path="/datenschutz" element={<PrivacyPage />} />
           <Route path="/impressum" element={<ImprintPage />} />
+          <Route path="/mail-bestaetigt" element={<MailSuccessPage />} />
           <Route path="/passwort-vergessen" element={<PasswordForgotPage />} />
           <Route path="/passwort-zuruecksetzen" element={<PasswordResetPage />} />
           <Route path="*" element={<NotFoundPage />} />

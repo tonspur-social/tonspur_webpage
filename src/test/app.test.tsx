@@ -3,9 +3,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../App';
 import { StoreButtons } from '../components/StoreButtons';
-import { PasswordForgotPage, PasswordResetPage } from '../pages/PasswordPages';
+import { MailSuccessPage, PasswordForgotPage, PasswordResetPage } from '../pages/PasswordPages';
 
 const supabaseMocks = vi.hoisted(() => ({
+  exchangeCodeForSession: vi.fn(),
   getSession: vi.fn(),
   onAuthStateChange: vi.fn(),
   resetPasswordForEmail: vi.fn(),
@@ -17,6 +18,7 @@ const supabaseMocks = vi.hoisted(() => ({
 vi.mock('../lib/supabase', () => ({
   supabase: {
     auth: {
+      exchangeCodeForSession: supabaseMocks.exchangeCodeForSession,
       getSession: supabaseMocks.getSession,
       onAuthStateChange: supabaseMocks.onAuthStateChange,
       resetPasswordForEmail: supabaseMocks.resetPasswordForEmail,
@@ -41,6 +43,12 @@ function renderWithRouter(ui: React.ReactElement, route = '/') {
 describe('app routes and shared UI', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    window.history.replaceState({}, '', '/');
+    window.location.hash = '';
+    supabaseMocks.exchangeCodeForSession.mockResolvedValue({
+      data: { session: { user: { id: 'user-1' } } },
+      error: null,
+    });
     supabaseMocks.getSession.mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } });
     supabaseMocks.onAuthStateChange.mockReturnValue({
       data: { subscription: { unsubscribe: supabaseMocks.unsubscribe } },
@@ -96,6 +104,24 @@ describe('app routes and shared UI', () => {
     expect(await screen.findByText(/link zum zurücksetzen unterwegs/i)).toBeInTheDocument();
   });
 
+  it('renders the mail confirmation success page', () => {
+    renderWithRouter(<App />, '/mail-bestaetigt');
+
+    expect(screen.getByRole('heading', { name: /deine mail ist bestätigt/i })).toBeInTheDocument();
+    expect(screen.getByText(/e-mail-adresse wurde bestätigt/i)).toBeInTheDocument();
+  });
+
+  it('renders Supabase mail confirmation errors', () => {
+    window.location.hash = '#error=access_denied&error_description=Link+abgelaufen';
+
+    renderWithRouter(<MailSuccessPage />, '/mail-bestaetigt');
+
+    expect(
+      screen.getByRole('heading', { name: /link konnte nicht bestätigt werden/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/link abgelaufen/i)).toBeInTheDocument();
+  });
+
   it('updates the password through the recovery session', async () => {
     renderWithRouter(<PasswordResetPage />, '/passwort-zuruecksetzen');
 
@@ -115,5 +141,38 @@ describe('app routes and shared UI', () => {
     });
     expect(supabaseMocks.signOut).toHaveBeenCalled();
     expect(await screen.findByText(/passwort wurde aktualisiert/i)).toBeInTheDocument();
+  });
+
+  it('shows a clearer message when the password reset page has no recovery session', async () => {
+    supabaseMocks.getSession.mockResolvedValue({ data: { session: null } });
+
+    renderWithRouter(<PasswordResetPage />, '/passwort-zuruecksetzen');
+
+    expect(await screen.findByText(/keine gültige wiederherstellungssitzung/i)).toBeInTheDocument();
+    expect(screen.getByText(/ConfirmationURL/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /passwort speichern/i })).toBeDisabled();
+  });
+
+  it('renders Supabase query errors on the password reset page', async () => {
+    window.history.replaceState(
+      {},
+      '',
+      '/passwort-zuruecksetzen?error=access_denied&error_description=Link+abgelaufen',
+    );
+
+    renderWithRouter(<PasswordResetPage />, '/passwort-zuruecksetzen');
+
+    expect(await screen.findByText('Link abgelaufen', { selector: '.form-status span' })).toBeInTheDocument();
+    expect(supabaseMocks.getSession).not.toHaveBeenCalled();
+  });
+
+  it('exchanges password recovery code links before enabling the form', async () => {
+    window.history.replaceState({}, '', '/passwort-zuruecksetzen?code=recovery-code');
+
+    renderWithRouter(<PasswordResetPage />, '/passwort-zuruecksetzen');
+
+    expect(await screen.findByText(/dein link ist gültig/i)).toBeInTheDocument();
+    expect(supabaseMocks.exchangeCodeForSession).toHaveBeenCalledWith('recovery-code');
+    expect(screen.getByRole('button', { name: /passwort speichern/i })).toBeEnabled();
   });
 });

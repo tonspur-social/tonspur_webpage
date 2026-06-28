@@ -1,5 +1,6 @@
 export const PASSWORD_RESET_REQUEST_PATH = '/passwort-vergessen';
 export const PASSWORD_RESET_UPDATE_PATH = '/passwort-zuruecksetzen';
+export const EMAIL_SUCCESS_PATH = '/mail-bestaetigt';
 
 const trimTrailingSlash = (value: string) => value.replace(/\/+$/, '');
 
@@ -26,6 +27,10 @@ export function getPasswordResetRedirectUrl(explicitSiteUrl?: string, origin?: s
   return `${getSiteUrl(explicitSiteUrl, origin)}${PASSWORD_RESET_UPDATE_PATH}`;
 }
 
+export function getEmailSuccessRedirectUrl(explicitSiteUrl?: string, origin?: string): string {
+  return `${getSiteUrl(explicitSiteUrl, origin)}${EMAIL_SUCCESS_PATH}`;
+}
+
 export type PasswordValidationResult = {
   ok: boolean;
   message?: string;
@@ -47,6 +52,7 @@ export function validatePasswordReset(
 }
 
 export type AuthHashState = {
+  code?: string;
   error?: string;
   errorDescription?: string;
   type?: string;
@@ -54,9 +60,26 @@ export type AuthHashState = {
 
 export function parseAuthHash(hash: string): AuthHashState {
   const cleanHash = hash.startsWith('#') ? hash.slice(1) : hash;
-  const params = new URLSearchParams(cleanHash);
+  return parseAuthParams(new URLSearchParams(cleanHash));
+}
 
+export function parseAuthUrlParams(search: string, hash: string): AuthHashState {
+  const cleanSearch = search.startsWith('?') ? search.slice(1) : search;
+  const cleanHash = hash.startsWith('#') ? hash.slice(1) : hash;
+  const searchParams = new URLSearchParams(cleanSearch);
+  const hashParams = new URLSearchParams(cleanHash);
+  const params = new URLSearchParams(searchParams);
+
+  hashParams.forEach((value, key) => {
+    params.set(key, value);
+  });
+
+  return parseAuthParams(params);
+}
+
+function parseAuthParams(params: URLSearchParams): AuthHashState {
   return {
+    code: params.get('code') ?? undefined,
     error: params.get('error') ?? undefined,
     errorDescription:
       params.get('error_description')?.replace(/\+/g, ' ') ??
